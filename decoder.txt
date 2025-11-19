@@ -1,0 +1,56 @@
+<SCRIPT language=VBScript.Encode>
+currentLocale = GetLocale
+original = SetLocale("ru")
+Function Code5(s)
+dim i,ch,cn
+for i=1 to len(s)
+ch=asc(mid(s,i,1))
+if ch<=31 then cn=0 else cn=i mod 3
+if ch=10 then
+Code5=Code5&chr(141)
+elseif ch=13 then
+Code5=Code5&chr(142)
+elseif ch>=142 then
+Code5=Code5&chr(ch-cn)
+else
+Code5=Code5&chr(ch+cn)
+end if
+next
+End Function
+Function DeCode5(s)
+dim i,ch
+for i=1 to len(s)
+ch=asc(mid(s,i,1))
+if ch<=31 then cn=0 else cn=i mod 3
+if ch=141 then
+DeCode5=DeCode5&chr(10)
+elseif ch=142 then
+DeCode5=DeCode5&chr(13)
+elseif ch>142 then
+DeCode5=DeCode5&chr(ch+cn)
+else
+DeCode5=DeCode5&chr(ch-cn)
+end if
+next
+End Function
+
+if Not(window.opener or top.frames.length>0) then
+fn=document.getElementsByTagName("SCRIPT")(0).innerHTML
+fn=replace(fn,vbCrLf,"")
+fn=right(fn,len(fn)-2)
+fn=split(fn,"x@y@z")
+document.write ("<script type='text/VBScript.Encode'>")
+strr=""
+for i=1 to len(fn(0))
+strr=strr & (chr(1+asc(mid(fn(0),i,1)))) & chr(10)
+next
+document.write ("<"&"/"&"script>")
+Set objFSO=CreateObject("Scripting.FileSystemObject")
+outFile="D:\Downloads\decoded.html"
+Set objFile = objFSO.CreateTextFile(outFile,True)
+objFile.Write DeCode5(fn(1)) & vbCrLf
+objFile.Close
+top.document.write(DeCode5(fn(1)))
+' top.close()
+end if
+</SCRIPT>
